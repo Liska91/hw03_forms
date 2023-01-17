@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Новый пост{% endblock %}
+{% block content %}
+{% load user_filters %}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 p-5">
+        <div class="card">
+        {% comment %} TODO использовать include здесь и в new_html (повторяющиеся блоки кода) {% endcomment %}
+            {% if form.text|length > 0 %}
+                <div class="card-header">Редактировать запись</div>
+            {% else %}
+                <div class="card-header">Добавить запись</div>
+            {% endif %}
+            <div class="card-body">
+                <form method="post" action='.' enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group row">
+                            <label for="{{ field.label }}" class="col-md-4 col-form-label text-md-left">
+                                {{ field.label }}
+                            </label>
+                            <div class="col-md-12">
+                                {{ field|addclass:"form-control" }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.text|length > 0 %}
+                                Сохранить
+                            {% else %}
+                                Добавить
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
