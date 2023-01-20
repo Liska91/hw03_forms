@@ -67,7 +67,7 @@ def post_create(request):
         request,
         'posts/create_post.html',
         {'form': form}
-        )
+    )
 
 
 @login_required
