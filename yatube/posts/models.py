@@ -31,7 +31,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return self.text[:settings.POSTS_ON_SCREEN]
+        return self.text[:settings.TEXT_LIMIT]
 
     class Meta:
         ordering = ['-pub_date']

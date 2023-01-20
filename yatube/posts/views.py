@@ -15,15 +15,13 @@ def get_page_context(posts, request):
     paginator = Paginator(posts, settings.POSTS_ON_SCREEN)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return {
-        'paginator': paginator,
-        'page_number': page_number,
-        'page_obj': page_obj
-    }
+    return page_obj
 
 
 def index(request):
-    context = get_page_context(Post.objects.all(), request)
+    context = {
+        "page_obj" : get_page_context(Post.objects.all(), request)
+    }
     return render(request, 'posts/index.html', context)
 
 
@@ -31,19 +29,19 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all()[:settings.POSTS_ON_SCREEN]
     context = {
-        'group': group,
-        'posts': posts
-    }
-    context.update(get_page_context(group.posts.all(), request))
+        "page_obj": get_page_context(posts, request),
+        "group": group
+    }   
     return render(request, 'posts/group_list.html', context)
 
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
+    post_list = author.posts.all()
     context = {
-        'author': author
+        'author': author,
+        "page_obj": get_page_context(post_list, request)
     }
-    context.update(get_page_context(author.posts.all(), request))
     return render(request, "posts/profile.html", context)
 
 
@@ -60,13 +58,15 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     form = PostForm(request.POST or None)
-    if not form.is_valid():
-        return render(request, 'posts/create_post.html',
-                               {'form': form}
-                      )
-    form.instance.author = request.user
-    form.save()
-    return redirect('post:profile', request.user)
+    if form.is_valid():
+        create_post = form.save(commit=False)
+        create_post.author = request.user
+        form.save()
+        return redirect('posts:profile', create_post.author)
+    return render(request,
+                 'posts/create_post.html',
+                 {'form': form}
+        )
 
 
 @login_required
@@ -74,8 +74,6 @@ def post_edit(request, post_id):
     post = Post.objects.get(pk=post_id)
     form = PostForm(request.POST or None, instance=post)
     if form.is_valid():
-        form = form.save(False)
-        form.author = request.user
         form.save()
         return redirect('post:post_detail', post_id=post.id)
     return render(

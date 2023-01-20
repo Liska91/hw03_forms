@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title> Профайл пользователя {{ profile_user.get_full_name }}</title>
+    <title> Профайл пользователя {{ author.get_full_name }}</title>
 {% endblock %}
 
 {% block content %}
     <div class="container py-5">
-        <h1>Все посты пользователя {{ profile_user.get_full_name }}</h1>
-        <h3>Всего постов: {{posts_counter}} </h3>
+        <h1>Все посты пользователя {{ author.get_full_name }}</h1>
+        <h3>Всего постов: {{ author.posts.count }} </h3>
         {% for post in page_obj %}
             <div class="container">
                 <p></p>
                 <ul>
                     <li>
-                        Автор: {{ post.author.get_full_name }}
+                        Автор: {{ author.get_full_name }}
                     </li>
                     <li>
                         Дата публикации: {{ post.pub_date|date:"d E Y" }}
@@ -32,6 +32,4 @@
         <!-- Остальные посты. после последнего нет черты -->
         {% include 'includes/paginator.html' %}
     </div>
-
-
 {% endblock %}

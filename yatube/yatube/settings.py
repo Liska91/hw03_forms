@@ -126,6 +126,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 POSTS_ON_SCREEN = 10
+TEXT_LIMIT = 5
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:index'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
