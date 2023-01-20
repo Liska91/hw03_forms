@@ -20,7 +20,7 @@ def get_page_context(posts, request):
 
 def index(request):
     context = {
-        "page_obj" : get_page_context(Post.objects.all(), request)
+        "page_obj": get_page_context(Post.objects.all(), request)
     }
     return render(request, 'posts/index.html', context)
 
@@ -31,7 +31,7 @@ def group_posts(request, slug):
     context = {
         "page_obj": get_page_context(posts, request),
         "group": group
-    }   
+    }
     return render(request, 'posts/group_list.html', context)
 
 
@@ -63,9 +63,10 @@ def post_create(request):
         create_post.author = request.user
         form.save()
         return redirect('posts:profile', create_post.author)
-    return render(request,
-                 'posts/create_post.html',
-                 {'form': form}
+    return render(
+        request,
+        'posts/create_post.html',
+        {'form': form}
         )
 
 
